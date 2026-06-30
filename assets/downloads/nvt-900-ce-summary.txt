@@ -1,0 +1,8 @@
+NOVITAS NVT-900 CE Declaration Summary
+
+Demo certificate file for the NOVITAS website prototype.
+
+Contents:
+- Certification summary placeholder
+- Manufacturer documentation reference
+- Procurement review support note

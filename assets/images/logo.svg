@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-label="NOVITAS logo">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0d6297"/>
+      <stop offset="100%" stop-color="#18b7a4"/>
+    </linearGradient>
+  </defs>
+  <rect width="160" height="160" rx="32" fill="#0b1830"/>
+  <path d="M42 34 L42 126 L68 126 L108 62 L108 126 L136 126 L136 34 L108 34 L68 98 L68 34 Z" fill="url(#grad)"/>
+  <path d="M120 28 C126 18 142 14 152 22 C162 30 166 46 160 56 C154 66 142 68 136 60 C130 52 116 38 120 28 Z" fill="#57d8b5"/>
+  <path d="M44 30 C36 18 20 14 10 22 C0 30 -4 46 2 56 C8 66 20 68 26 60 C32 52 46 38 44 30 Z" fill="#61b6e6" opacity="0.9"/>
+</svg>

@@ -1,0 +1,9 @@
+NOVITAS NVT-900 ICU Ventilation Platform
+
+Demo brochure file for the NOVITAS website prototype.
+
+Contents:
+- Critical care ventilation platform overview
+- Clinical workflow support
+- Installation and training options
+- Warranty and lifecycle service information

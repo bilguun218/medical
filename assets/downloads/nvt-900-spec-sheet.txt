@@ -1,0 +1,9 @@
+NOVITAS NVT-900 Technical Specification Sheet
+
+Demo specification file for the NOVITAS website prototype.
+
+Contents:
+- Ventilation mode summary
+- Display and patient configuration
+- Alarm and power information
+- Warranty and support options

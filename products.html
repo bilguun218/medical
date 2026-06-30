@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Browse NOVITAS medical equipment by category, brand, certification, and clinical application.">
+    <title>Products | NOVITAS</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+  </head>
+  <body>
+    <header class="site-header" data-header>
+      <div class="container nav-inner">
+        <a class="brand" href="index.html" aria-label="NOVITAS home"><img class="brand-logo" src="assets/images/logo.svg" alt="NOVITAS logo"><span>NOVITAS</span></a>
+        <nav class="nav-menu" data-nav-menu aria-label="Primary navigation">
+          <a class="nav-link" href="index.html">Home</a>
+          <a class="nav-link" href="about.html">About</a>
+          <button class="nav-link is-active" type="button" data-mega-toggle aria-expanded="false">Products <i data-lucide="chevron-down"></i></button>
+          <a class="nav-link" href="index.html#solutions">Solutions</a>
+          <a class="nav-link" href="index.html#projects">Projects</a>
+          <a class="nav-link" href="contact.html">Contact</a>
+        </nav>
+        <div class="nav-actions">
+          <button class="icon-btn" type="button" data-open-search aria-label="Search"><i data-lucide="search"></i></button>
+          <button class="language-toggle" type="button" data-language-toggle data-lang="EN">EN</button>
+          <button class="icon-btn theme-toggle" type="button" data-theme-toggle aria-label="Switch dark mode"><i data-lucide="moon"></i></button>
+          <a class="btn btn-primary contact-short" href="contact.html">Contact</a>
+          <button class="icon-btn mobile-toggle" type="button" data-mobile-toggle aria-expanded="false" aria-label="Open navigation"><i data-lucide="menu"></i></button>
+        </div>
+      </div>
+    </header>
+
+    <div class="mega-menu" data-mega-menu>
+      <div class="mega-grid">
+        <div class="mega-card">
+          <p class="eyebrow">Product portfolio</p>
+          <h3>Certified systems for every clinical department.</h3>
+          <div class="mega-list">
+            <a class="mega-item" href="products.html">Diagnostic Imaging <i data-lucide="arrow-up-right"></i></a>
+            <a class="mega-item" href="products.html">Surgery & Operating Room <i data-lucide="arrow-up-right"></i></a>
+            <a class="mega-item" href="products.html">ICU & Patient Monitoring <i data-lucide="arrow-up-right"></i></a>
+            <a class="mega-item" href="products.html">Laboratory & Sterilization <i data-lucide="arrow-up-right"></i></a>
+          </div>
+        </div>
+        <div class="mega-card">
+          <h4>Fast paths</h4>
+          <div class="mega-list">
+            <a class="mega-item" href="product-detail.html">Featured ventilator</a>
+            <a class="mega-item" href="products.html">Compare products</a>
+            <a class="mega-item" href="product-detail.html#downloads">Certificates</a>
+            <a class="mega-item" href="contact.html">Request a quote</a>
+          </div>
+        </div>
+        <a class="mega-feature" href="product-detail.html">
+          <span class="meta-chip">Featured system</span>
+          <h3>NVT-900 ICU Ventilation Platform</h3>
+          <p>Advanced respiratory support with commissioning and lifecycle service.</p>
+        </a>
+      </div>
+    </div>
+
+    <main class="page-shell">
+      <section class="page-hero">
+        <div class="container page-hero-grid">
+          <div class="reveal">
+            <div class="breadcrumbs"><a href="index.html">Home</a><span>/</span><span>Products</span></div>
+            <p class="eyebrow">Product listing</p>
+            <h1>Medical equipment catalog built for confident comparison.</h1>
+            <p class="lead">Search certified healthcare systems by clinical category, brand, and technical requirement, then move directly into documentation or quote workflows.</p>
+          </div>
+          <div class="image-card reveal">
+            <img src="https://images.unsplash.com/photo-1723513198534-c3cd2e033815?auto=format&fit=crop&fm=jpg&q=74&w=1000" alt="Hospital equipment and monitor in a clean clinical room">
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="toolbar reveal">
+            <div class="input-shell" style="flex: 1">
+              <i data-lucide="search"></i>
+              <input data-catalog-search type="search" placeholder="Search by product, brand, or category">
+            </div>
+            <div class="input-shell">
+              <i data-lucide="arrow-up-down"></i>
+              <select data-catalog-sort aria-label="Sort products">
+                <option value="rank">Recommended</option>
+                <option value="category">Category</option>
+                <option value="brand">Brand</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="catalog-layout">
+            <aside class="filters reveal" aria-label="Product filters">
+              <h3>Filters</h3>
+              <p class="text-small">Refine the catalog by clinical category and partner brand.</p>
+              <div class="filter-group">
+                <h4>Category</h4>
+                <label class="check-row"><input type="checkbox" data-filter value="ICU"> ICU & Respiratory</label>
+                <label class="check-row"><input type="checkbox" data-filter value="Imaging"> Diagnostic Imaging</label>
+                <label class="check-row"><input type="checkbox" data-filter value="Surgery"> Surgery</label>
+                <label class="check-row"><input type="checkbox" data-filter value="Lab"> Laboratory</label>
+                <label class="check-row"><input type="checkbox" data-filter value="Sterilization"> Sterilization</label>
+              </div>
+              <div class="filter-group">
+                <h4>Brand</h4>
+                <label class="check-row"><input type="checkbox" data-filter value="VITALIS"> VITALIS</label>
+                <label class="check-row"><input type="checkbox" data-filter value="AURORA"> AURORA</label>
+                <label class="check-row"><input type="checkbox" data-filter value="CLARITY"> CLARITY</label>
+                <label class="check-row"><input type="checkbox" data-filter value="STERISYS"> STERISYS</label>
+              </div>
+              <div class="filter-group">
+                <h4>Certification</h4>
+                <label class="check-row"><input type="checkbox"> CE marked</label>
+                <label class="check-row"><input type="checkbox"> ISO supported</label>
+                <label class="check-row"><input type="checkbox"> Warranty included</label>
+              </div>
+              <a class="btn btn-secondary" href="contact.html">Need Help Choosing?</a>
+            </aside>
+
+            <div class="catalog-grid" data-catalog-grid>
+              <article class="card catalog-card reveal" data-product-card data-rank="01" data-name="NVT-900 ICU Ventilation Platform" data-category="ICU" data-brand="VITALIS">
+                <div class="product-image"><img src="https://images.unsplash.com/photo-1630128295920-627fb9aff5a4?auto=format&fit=crop&fm=jpg&q=74&w=900" alt="ICU ventilation platform"></div>
+                <div class="product-info">
+                  <div>
+                    <div class="meta-row"><span class="meta-chip">ICU</span><span class="meta-chip">VITALIS</span><span class="meta-chip">CE</span></div>
+                    <h3>NVT-900 ICU Ventilation Platform</h3>
+                    <p class="text-small">Critical care respiratory support with guided setup and service plans.</p>
+                  </div>
+                  <div class="card-actions"><a class="btn btn-primary" href="product-detail.html">Details</a><button class="icon-btn" type="button" data-action="compare" aria-label="Compare"><i data-lucide="copy-plus"></i></button></div>
+                </div>
+              </article>
+
+              <article class="card catalog-card reveal" data-product-card data-rank="02" data-name="ArcVision Mobile C-Arm" data-category="Imaging" data-brand="AURORA">
+                <div class="product-image"><img src="https://images.unsplash.com/photo-1776104501583-3c83f2adfc3d?auto=format&fit=crop&fm=jpg&q=74&w=900" alt="Mobile C-arm imaging system"></div>
+                <div class="product-info">
+                  <div>
+                    <div class="meta-row"><span class="meta-chip">Imaging</span><span class="meta-chip">AURORA</span></div>
+                    <h3>ArcVision Mobile C-Arm</h3>
+                    <p class="text-small">Fluoroscopy for orthopedic, trauma, and surgical workflows.</p>
+                  </div>
+                  <div class="card-actions"><a class="btn btn-secondary" href="product-detail.html">Details</a><button class="icon-btn" type="button" data-action="download" aria-label="Download brochure"><i data-lucide="download"></i></button></div>
+                </div>
+              </article>
+
+              <article class="card catalog-card reveal" data-product-card data-rank="03" data-name="LumaOR Surgical Light System" data-category="Surgery" data-brand="CLARITY">
+                <div class="product-image"><img src="https://images.unsplash.com/photo-1775947933085-30050ddad6b3?auto=format&fit=crop&fm=jpg&q=74&w=900" alt="Surgical lights in operating room"></div>
+                <div class="product-info">
+                  <div>
+                    <div class="meta-row"><span class="meta-chip">Surgery</span><span class="meta-chip">CLARITY</span></div>
+                    <h3>LumaOR Surgical Light System</h3>
+                    <p class="text-small">Shadow-managed LED lighting for operating rooms and procedure suites.</p>
+                  </div>
+                  <div class="card-actions"><a class="btn btn-secondary" href="product-detail.html">Details</a><button class="icon-btn" type="button" data-action="compare" aria-label="Compare"><i data-lucide="copy-plus"></i></button></div>
+                </div>
+              </article>
+
+              <article class="card catalog-card reveal" data-product-card data-rank="04" data-name="VitaLine Patient Monitor" data-category="ICU" data-brand="VITALIS">
+                <div class="product-image"><img src="https://images.unsplash.com/photo-1723513198534-c3cd2e033815?auto=format&fit=crop&fm=jpg&q=74&w=900" alt="Patient monitor in clinical room"></div>
+                <div class="product-info">
+                  <div>
+                    <div class="meta-row"><span class="meta-chip">ICU</span><span class="meta-chip">VITALIS</span></div>
+                    <h3>VitaLine Patient Monitor</h3>
+                    <p class="text-small">Multiparameter monitoring for critical care, recovery, and emergency rooms.</p>
+                  </div>
+                  <div class="card-actions"><a class="btn btn-secondary" href="product-detail.html">Details</a><button class="icon-btn" type="button" data-action="download" aria-label="Download brochure"><i data-lucide="download"></i></button></div>
+                </div>
+              </article>
+
+              <article class="card catalog-card reveal" data-product-card data-rank="05" data-name="AseptiPro Sterilization Unit" data-category="Sterilization" data-brand="STERISYS">
+                <div class="product-image"><img src="https://images.unsplash.com/photo-1645273474732-8fd9c63a148f?auto=format&fit=crop&fm=jpg&q=74&w=900" alt="Sterile medical equipment in hospital room"></div>
+                <div class="product-info">
+                  <div>
+                    <div class="meta-row"><span class="meta-chip">Sterilization</span><span class="meta-chip">STERISYS</span></div>
+                    <h3>AseptiPro Sterilization Unit</h3>
+                    <p class="text-small">Central sterile processing support for small and mid-size facilities.</p>
+                  </div>
+                  <div class="card-actions"><a class="btn btn-secondary" href="product-detail.html">Details</a><button class="icon-btn" type="button" data-action="compare" aria-label="Compare"><i data-lucide="copy-plus"></i></button></div>
+                </div>
+              </article>
+
+              <article class="card catalog-card reveal" data-product-card data-rank="06" data-name="HemaCore Lab Analyzer" data-category="Lab" data-brand="CLARITY">
+                <div class="product-image"><img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&fm=jpg&q=74&w=900" alt="Laboratory analysis equipment"></div>
+                <div class="product-info">
+                  <div>
+                    <div class="meta-row"><span class="meta-chip">Lab</span><span class="meta-chip">CLARITY</span></div>
+                    <h3>HemaCore Lab Analyzer</h3>
+                    <p class="text-small">Diagnostic analyzer package with installation and operator onboarding.</p>
+                  </div>
+                  <div class="card-actions"><a class="btn btn-secondary" href="product-detail.html">Details</a><button class="icon-btn" type="button" data-action="download" aria-label="Download brochure"><i data-lucide="download"></i></button></div>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-tight">
+        <div class="container">
+          <div class="cta-band reveal">
+            <div class="cta-inner">
+              <div>
+                <p class="eyebrow">Quote workflow</p>
+                <h2>Need specifications, lead time, or a package quote?</h2>
+                <p>NOVITAS can prepare product comparisons and technical documentation for procurement review.</p>
+              </div>
+              <a class="btn btn-primary" href="contact.html">Request Quote</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-grid">
+        <div>
+          <a class="brand" href="index.html"><img class="brand-logo" src="assets/images/logo.svg" alt="NOVITAS logo"><span>NOVITAS</span></a>
+          <p>Premium medical equipment distribution and healthcare technology solutions for modern clinical environments.</p>
+          <form class="newsletter"><input type="email" aria-label="Email address" placeholder="Email for updates"><button type="submit">Join</button></form>
+        </div>
+        <div><h4>Company</h4><a href="about.html">About</a><a href="about.html#timeline">Timeline</a><a href="index.html#projects">Projects</a><a href="contact.html">Contact</a></div>
+        <div><h4>Products</h4><a href="products.html">Catalog</a><a href="product-detail.html">Featured Product</a><a href="products.html">Categories</a><a href="product-detail.html#downloads">Downloads</a></div>
+        <div><h4>Solutions</h4><a href="index.html#solutions">Hospital Setup</a><a href="index.html#solutions">ICU Modernization</a><a href="index.html#solutions">Surgical Suites</a><a href="contact.html">Service Support</a></div>
+        <div><h4>Contact</h4><a href="mailto:hello@novitas.health">hello@novitas.health</a><a href="tel:+97677770000">+976 7777 0000</a><a href="contact.html">Business hours</a><a href="contact.html">Quote shortcut</a></div>
+      </div>
+      <div class="container footer-bottom">
+        <span>© 2026 NOVITAS Healthcare Technology. All rights reserved.</span>
+        <div class="socials"><a href="about.html" aria-label="Company profile"><i data-lucide="building-2"></i></a><a href="contact.html" aria-label="Message NOVITAS"><i data-lucide="message-circle"></i></a><a href="mailto:hello@novitas.health" aria-label="Mail"><i data-lucide="mail"></i></a></div>
+      </div>
+    </footer>
+
+    <div class="search-overlay" data-search-overlay role="dialog" aria-modal="true" aria-label="Site search">
+      <div class="search-panel">
+        <div class="search-field">
+          <i data-lucide="search"></i>
+          <input data-search-input type="search" placeholder="Search products, certificates, solutions">
+          <button class="icon-btn" type="button" data-close-search aria-label="Close search"><i data-lucide="x"></i></button>
+        </div>
+        <div class="search-results" data-search-results></div>
+      </div>
+    </div>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script src="assets/js/main.js"></script>
+  </body>
+</html>
