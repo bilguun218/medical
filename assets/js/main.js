@@ -356,9 +356,22 @@ const translations = {
   }
 };
 
-function t(value) {
+function t(value, language = "mn") {
   const key = String(value || "").trim();
-  return translations.mn[key] || key;
+  if (!key) return key;
+  if (language !== "mn") return key;
+  const dict = translations.mn || {};
+  if (Object.prototype.hasOwnProperty.call(dict, key)) return dict[key];
+  const norm = key.replace(/\s+/g, " ").trim();
+  if (Object.prototype.hasOwnProperty.call(dict, norm)) return dict[norm];
+  const lower = key.toLowerCase();
+  const found = Object.keys(dict).find((k) => k.toLowerCase() === lower);
+  if (found) return dict[found];
+  const stripped = key.replace(/[.:;!?]+$/, "").trim();
+  if (Object.prototype.hasOwnProperty.call(dict, stripped)) return dict[stripped];
+  const found2 = Object.keys(dict).find((k) => k.toLowerCase() === stripped.toLowerCase());
+  if (found2) return dict[found2];
+  return key;
 }
 
 function translateTextNode(node, language) {
@@ -366,8 +379,8 @@ function translateTextNode(node, language) {
   const original = originalTextNodes.get(node);
   const trimmed = original.trim();
   if (!trimmed) return;
-  const translated = language === "mn" ? translations.mn[trimmed] : null;
-  if (!translated) {
+  const translated = language === "mn" ? t(trimmed, "mn") : null;
+  if (!translated || translated === trimmed) {
     node.nodeValue = original;
     return;
   }
@@ -385,7 +398,7 @@ function translateAttribute(element, attribute, language) {
     originals[attribute] = element.getAttribute(attribute);
   }
   const original = originals[attribute];
-  const translated = language === "mn" ? translations.mn[original] : null;
+  const translated = language === "mn" ? t(String(original || "").trim(), "mn") : null;
   element.setAttribute(attribute, translated || original);
 }
 
@@ -409,10 +422,13 @@ function setLanguage(language) {
   while (walker.nextNode()) nodes.push(walker.currentNode);
   nodes.forEach((node) => translateTextNode(node, nextLanguage));
 
-  document.querySelectorAll("[placeholder], [aria-label], [title]").forEach((element) => {
+  document.querySelectorAll("[placeholder], [aria-label], [title], [alt], [value]").forEach((element) => {
     translateAttribute(element, "placeholder", nextLanguage);
     translateAttribute(element, "aria-label", nextLanguage);
     translateAttribute(element, "title", nextLanguage);
+    translateAttribute(element, "alt", nextLanguage);
+    // translate value where applicable (inputs/buttons)
+    translateAttribute(element, "value", nextLanguage);
   });
 
   languageButtons.forEach((button) => {

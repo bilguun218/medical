@@ -1795,6 +1795,56 @@ h4 {
     border-right: 0;
   }
 
+  /* Navigation sizing and spacing tweaks for mobile */
+  .nav-menu .nav-link {
+    font-size: 15px;
+    min-height: 44px;
+    padding: 0 14px;
+  }
+
+  .nav-menu.is-open {
+    gap: 8px;
+    padding: 12px;
+  }
+
+  .nav-menu.is-open .nav-link {
+    padding: 12px 16px;
+    border-radius: 12px;
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  /* Ensure icon and toggle colors contrast in dark mode */
+  .icon-btn,
+  .nav-actions .language-toggle,
+  .nav-actions .theme-toggle {
+    color: var(--text);
+    border-color: var(--line);
+    background: var(--surface);
+  }
+
+  /* Dark theme overrides to keep nav text readable */
+  :root[data-theme="dark"] .nav-link,
+  :root[data-theme="dark"] .nav-actions .language-toggle,
+  :root[data-theme="dark"] .nav-actions .theme-toggle {
+    color: var(--text);
+  }
+
+  :root[data-theme="dark"] .nav-menu.is-open {
+    background: var(--surface);
+  }
+
+  :root[data-theme="dark"] .mega-menu,
+  :root[data-theme="dark"] .mega-card {
+    background: var(--surface);
+    border-color: var(--line);
+    color: var(--text);
+  }
+
+  :root[data-theme="dark"] .mega-item {
+    color: var(--muted);
+  }
+
   .product-showcase,
   .case-card,
   .catalog-layout {
@@ -1836,6 +1886,12 @@ h4 {
   .nav-actions .language-toggle,
   .nav-actions .theme-toggle {
     display: none;
+  }
+
+  /* Show theme and language toggles when mobile nav is opened */
+  .site-header.is-open .nav-actions .language-toggle,
+  .site-header.is-open .nav-actions .theme-toggle {
+    display: inline-grid;
   }
 
   .brand {
