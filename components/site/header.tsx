@@ -42,8 +42,8 @@ export function SiteHeader({ locale }: { locale: Locale }) {
     <header className="sticky top-0 z-40 border-b bg-background/86 backdrop-blur-xl">
       <div className="mx-auto flex h-20 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link href={`/${locale}`} className="flex items-center gap-3" aria-label="NOVYTAS home">
-          <span className="relative flex h-11 w-11 overflow-hidden rounded-lg border bg-white">
-            <Image src={isDark ? "/brand/novytas-logo-white.png" : "/brand/novytas-logo.png"} alt="NOVYTAS" fill sizes="44px" className="object-cover" priority />
+          <span className="relative flex h-11 w-11 items-center justify-center overflow-hidden rounded-lg border bg-transparent">
+            <Image src={isDark ? "/brand/novytas-logo-white.png" : "/brand/novytas-logo.png"} alt="NOVYTAS" fill sizes="44px" className="object-contain" priority />
           </span>
           <span className="text-base font-semibold tracking-normal text-primary dark:text-white">{company.name[locale]}</span>
         </Link>

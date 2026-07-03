@@ -12,8 +12,8 @@ export function SiteFooter({ locale }: { locale: Locale }) {
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-[1.3fr_1fr_1fr] lg:px-8">
         <div>
           <div className="flex items-center gap-3">
-            <span className="relative flex h-12 w-12 overflow-hidden rounded-lg border bg-white">
-              <Image src="/brand/novytas-logo.png" alt="NOVYTAS" fill sizes="48px" className="object-cover" />
+            <span className="relative flex h-12 w-12 items-center justify-center overflow-hidden rounded-lg border bg-transparent">
+              <Image src="/brand/novytas-logo.png" alt="NOVYTAS" fill sizes="48px" className="object-contain" />
             </span>
             <div>
               <p className="font-semibold text-primary dark:text-white">{company.name[locale]}</p>

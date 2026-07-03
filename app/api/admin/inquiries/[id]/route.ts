@@ -49,7 +49,7 @@ export async function PATCH(request: Request, { params }: RouteContext) {
 
     // 5. Return result
     return NextResponse.json(inquiry);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("PATCH /contactInquiry error:", error);
 
     return apiError(error);

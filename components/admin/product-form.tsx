@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, Save } from "lucide-react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -192,7 +193,7 @@ export function ProductForm({
             reader.readAsDataURL(file);
           }}
         />
-        {imagePreview ? <img src={imagePreview} alt="Product preview" className="h-40 w-full rounded-lg object-cover" /> : null}
+        {imagePreview ? <Image src={imagePreview} alt="Product preview" width={800} height={400} className="h-40 w-full rounded-lg object-cover" /> : null}
       </div>
       {message ? <p className="text-sm text-slate-500">{message}</p> : null}
       <Button type="submit" disabled={form.formState.isSubmitting}>
