@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { db } from "@/lib/db";
 import { revalidatePath } from "next/cache";
+import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
@@ -71,18 +72,23 @@ export default async function AdminProductsPage() {
                       <Badge>{product.status}</Badge>
                     </td>
                     <td className="py-3">
-                      <form action={deleteProduct}>
-                        <input type="hidden" name="id" value={product.id} />
-                        <Button type="submit" variant="destructive" size="sm">
-                          Устгах
+                      <div className="flex flex-wrap gap-2">
+                        <Button variant="outline" size="sm" asChild>
+                          <Link href={`/admin/products/${product.id}`}>Засах</Link>
                         </Button>
-                      </form>
+                        <form action={deleteProduct}>
+                          <input type="hidden" name="id" value={product.id} />
+                          <Button type="submit" variant="destructive" size="sm">
+                            Устгах
+                          </Button>
+                        </form>
+                      </div>
                     </td>
                   </tr>
                 ))}
                 {products.length === 0 ? (
                   <tr>
-                    <td colSpan={3} className="py-8 text-center text-slate-500">
+                    <td colSpan={4} className="py-8 text-center text-slate-500">
                       Одоогоор бүтээгдэхүүн алга.
                     </td>
                   </tr>

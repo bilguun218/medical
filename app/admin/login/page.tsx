@@ -20,14 +20,14 @@ export default async function LoginPage() {
             <Image src="/brand/novytas-logo.png" alt="NOVYTAS" fill sizes="56px" className="object-cover" priority />
           </span>
           <div>
-            <p className="text-xl font-semibold">NOVYTAS Admin</p>
-            <p className="text-sm text-white/55">Internal management system</p>
+            <p className="text-xl font-semibold">NOVYTAS Админ</p>
+            <p className="text-sm text-white/55">Дотоод удирдлагын систем</p>
           </div>
         </div>
         <Card className="border-white/10 bg-white text-slate-950">
           <CardHeader>
-            <CardTitle>Secure sign in</CardTitle>
-            <CardDescription>Use the administrator account created during the seed step.</CardDescription>
+            <CardTitle>Админ нэвтрэх</CardTitle>
+            <CardDescription>Үүсгэсэн админ эрхээр нэвтэрнэ үү.</CardDescription>
           </CardHeader>
           <div className="px-6 pb-6">
             <Suspense>

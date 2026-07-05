@@ -5,10 +5,13 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { MotionReveal } from "@/components/site/motion-reveal";
 import { SectionHeading } from "@/components/site/section-heading";
-import { productCategories, tText } from "@/content/novytas";
+import { tText } from "@/content/novytas";
 import { db } from "@/lib/db";
+import { getSeoRecord } from "@/lib/cms";
 import { dictionary, getLocale } from "@/lib/i18n";
+import { getProductCategoryOptions } from "@/lib/product-categories";
 import { createMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
@@ -18,12 +21,12 @@ type PageProps = {
   searchParams: Promise<{ category?: string; q?: string }>;
 };
 
-async function getProducts(category?: string, q?: string) {
+async function getProducts(categoryId?: string, q?: string) {
   try {
     return await db.product.findMany({
       where: {
         status: "PUBLISHED",
-        ...(category ? { category: { slug: category } } : {}),
+        ...(categoryId ? { categoryId } : {}),
         ...(q
           ? {
               OR: [
@@ -46,26 +49,33 @@ async function getProducts(category?: string, q?: string) {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale: rawLocale } = await params;
   const locale = getLocale(rawLocale);
+  const seo = await getSeoRecord("/products");
   return createMetadata({
     locale,
     path: `/${locale}/products`,
     title: dictionary[locale].products.title,
-    description: dictionary[locale].products.subtitle
+    description: dictionary[locale].products.subtitle,
+    seo
   });
 }
 
 export default async function ProductsPage({ params, searchParams }: PageProps) {
   const { locale: rawLocale } = await params;
-  const { category, q } = await searchParams;
+  const { category: categoryId, q } = await searchParams;
   const locale = getLocale(rawLocale);
   const dict = dictionary[locale];
-  const products = await getProducts(category, q);
+  const [products, categories] = await Promise.all([
+    getProducts(categoryId, q),
+    getProductCategoryOptions()
+  ]);
 
   return (
-    <main className="mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-24 lg:px-8">
-      <SectionHeading title={dict.products.title} description={dict.products.subtitle} />
+    <main className="page-reveal premium-container premium-section">
+      <MotionReveal>
+        <SectionHeading title={dict.products.title} description={dict.products.subtitle} />
+      </MotionReveal>
 
-      <form className="mt-8 grid gap-3 rounded-xl border bg-card p-4 md:grid-cols-[1fr_auto]">
+      <form className="mt-10 grid gap-3 rounded-2xl border border-slate-200/70 bg-white p-4 shadow-subtle md:grid-cols-[1fr_auto]">
         <div className="relative">
           <Search className="pointer-events-none absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
           <Input name="q" defaultValue={q ?? ""} className="pl-10" placeholder={dict.actions.search} />
@@ -74,28 +84,28 @@ export default async function ProductsPage({ params, searchParams }: PageProps) 
       </form>
 
       <div className="mt-8 flex flex-wrap gap-2">
-        <Button variant={!category ? "default" : "outline"} size="sm" asChild>
+        <Button variant={!categoryId ? "default" : "outline"} size="sm" asChild>
           <Link href={`/${locale}/products`}>{dict.products.categories}</Link>
         </Button>
-        {productCategories.map((item) => (
-          <Button key={item.slug} variant={category === item.slug ? "default" : "outline"} size="sm" asChild>
-            <Link href={`/${locale}/products?category=${item.slug}`}>{tText(item.title, locale)}</Link>
+        {categories.map((item) => (
+          <Button key={item.id ?? item.title.mn} variant={item.id && categoryId === item.id ? "default" : "outline"} size="sm" asChild>
+            <Link href={item.id ? `/${locale}/products?category=${item.id}` : `/${locale}/products`}>{tText(item.title, locale)}</Link>
           </Button>
         ))}
       </div>
 
       {products.length > 0 ? (
-        <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {products.map((product) => {
             const title = locale === "mn" ? product.titleMn : product.titleEn || product.titleMn;
             const summary = locale === "mn" ? product.summaryMn : product.summaryEn || product.summaryMn;
             const image = product.media.find((item) => item.media.type === "IMAGE")?.media;
             return (
-              <Card key={product.id} className="overflow-hidden">
-                <div className="flex aspect-[4/3] items-center justify-center bg-muted">
+              <Card key={product.id} className="premium-card-hover group overflow-hidden">
+                <div className="flex aspect-[4/3] items-center justify-center overflow-hidden bg-white">
                   {image ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={image.url} alt={locale === "mn" ? image.altMn ?? title : image.altEn ?? title} className="h-full w-full object-cover" />
+                    <img src={image.url} alt={locale === "mn" ? image.altMn ?? title : image.altEn ?? title} className="premium-image h-full w-full object-cover" />
                   ) : (
                     <ImageIcon className="h-10 w-10 text-muted-foreground" />
                   )}
@@ -104,7 +114,7 @@ export default async function ProductsPage({ params, searchParams }: PageProps) 
                   <Badge className="w-fit">{locale === "mn" ? product.category.titleMn : product.category.titleEn}</Badge>
                   <CardTitle>{title}</CardTitle>
                   {summary ? <CardDescription>{summary}</CardDescription> : null}
-                  <Link className="inline-flex items-center gap-2 text-sm font-semibold text-medical" href={`/${locale}/products/${product.slug}`}>
+                  <Link className="inline-flex items-center gap-2 text-sm font-semibold text-medical" href={`/${locale}/products/${product.id}`}>
                     {dict.actions.learnMore}
                     <ArrowRight className="h-4 w-4" />
                   </Link>

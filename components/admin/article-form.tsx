@@ -6,6 +6,9 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
+import { MediaUpload } from "@/components/admin/media-upload";
+import { MediaDeleteButton } from "@/components/admin/media-delete-button";
+import { RichTextEditor } from "@/components/admin/rich-text-editor";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,66 +17,108 @@ import { articleSchema } from "@/lib/validators";
 
 type ArticleFormValues = z.infer<typeof articleSchema>;
 
-export function ArticleForm({ categories }: { categories: Array<{ id: string; titleMn: string; titleEn: string }> }) {
+function formatDateTimeLocal(value?: Date | string | null) {
+  if (!value) return "";
+  const date = new Date(value);
+  const offset = date.getTimezoneOffset();
+  const localDate = new Date(date.getTime() - offset * 60 * 1000);
+  return localDate.toISOString().slice(0, 16);
+}
+
+type ArticleFormArticle = {
+  id: string;
+  categoryId: string | null;
+  coverImageId: string | null;
+  coverImage?: { url: string } | null;
+  titleMn: string;
+  titleEn: string | null;
+  excerptMn: string | null;
+  excerptEn: string | null;
+  bodyMn: string;
+  bodyEn: string | null;
+  status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
+  publishedAt: Date | string | null;
+  seoTitleMn: string | null;
+  seoTitleEn: string | null;
+  seoDescriptionMn: string | null;
+  seoDescriptionEn: string | null;
+};
+
+export function ArticleForm({
+  categories,
+  article
+}: {
+  categories: Array<{ id: string; titleMn: string; titleEn: string }>;
+  article?: ArticleFormArticle;
+}) {
   const router = useRouter();
   const [message, setMessage] = useState<string | null>(null);
+  const [coverImageUrl, setCoverImageUrl] = useState(article?.coverImage?.url ?? "");
   const form = useForm<ArticleFormValues>({
     resolver: zodResolver(articleSchema),
     defaultValues: {
-      slug: "",
-      categoryId: "",
-      titleMn: "",
-      titleEn: "",
-      excerptMn: "",
-      excerptEn: "",
-      bodyMn: "",
-      bodyEn: "",
-      status: "DRAFT",
-      seoTitleMn: "",
-      seoTitleEn: "",
-      seoDescriptionMn: "",
-      seoDescriptionEn: ""
+      categoryId: article?.categoryId ?? "",
+      coverImageId: article?.coverImageId ?? "",
+      titleMn: article?.titleMn ?? "",
+      titleEn: article?.titleEn ?? "",
+      excerptMn: article?.excerptMn ?? "",
+      excerptEn: article?.excerptEn ?? "",
+      bodyMn: article?.bodyMn ?? "",
+      bodyEn: article?.bodyEn ?? "",
+      status: article?.status ?? "DRAFT",
+      publishedAt: formatDateTimeLocal(article?.publishedAt),
+      seoTitleMn: article?.seoTitleMn ?? "",
+      seoTitleEn: article?.seoTitleEn ?? "",
+      seoDescriptionMn: article?.seoDescriptionMn ?? "",
+      seoDescriptionEn: article?.seoDescriptionEn ?? ""
     }
   });
 
   async function onSubmit(values: ArticleFormValues) {
     setMessage(null);
-    const response = await fetch("/api/admin/news", {
-      method: "POST",
+    const response = await fetch(article ? `/api/admin/news/${article.id}` : "/api/admin/news", {
+      method: article ? "PATCH" : "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(values)
     });
 
     if (!response.ok) {
-      setMessage("Unable to save article.");
+      setMessage("Нийтлэл хадгалах боломжгүй байна.");
       return;
     }
 
-    form.reset();
+    if (!article) {
+      form.reset();
+      setCoverImageUrl("");
+    }
     router.refresh();
-    setMessage("Article saved.");
+    setMessage(article ? "Нийтлэл шинэчлэгдлээ." : "Нийтлэл хадгалагдлаа.");
   }
+
+  const bodyMn = form.watch("bodyMn");
+  const bodyEn = form.watch("bodyEn");
+  const currentCoverImageId = form.watch("coverImageId");
 
   return (
     <form className="grid gap-4" onSubmit={form.handleSubmit(onSubmit)}>
       <div className="grid gap-4 md:grid-cols-2">
         <div className="grid gap-2">
-          <Label>Slug</Label>
-          <Input {...form.register("slug")} />
+          <Label>Төлөв</Label>
+          <select className="h-11 rounded-lg border bg-white px-3 text-sm" {...form.register("status")}>
+            <option value="DRAFT">Ноорог</option>
+            <option value="PUBLISHED">Нийтлэгдсэн</option>
+            <option value="ARCHIVED">Архивласан</option>
+          </select>
         </div>
         <div className="grid gap-2">
-          <Label>Status</Label>
-          <select className="h-11 rounded-lg border bg-white px-3 text-sm" {...form.register("status")}>
-            <option value="DRAFT">Draft</option>
-            <option value="PUBLISHED">Published</option>
-            <option value="ARCHIVED">Archived</option>
-          </select>
+          <Label>Нийтлэх огноо</Label>
+          <Input type="datetime-local" {...form.register("publishedAt")} />
         </div>
       </div>
       <div className="grid gap-2">
-        <Label>Category</Label>
+        <Label>Ангилал</Label>
         <select className="h-11 rounded-lg border bg-white px-3 text-sm" {...form.register("categoryId")}>
-          <option value="">No category</option>
+          <option value="">Ангилалгүй</option>
           {categories.map((category) => (
             <option key={category.id} value={category.id}>
               {category.titleMn}
@@ -81,40 +126,63 @@ export function ArticleForm({ categories }: { categories: Array<{ id: string; ti
           ))}
         </select>
       </div>
+      <div className="grid gap-2 rounded-lg border border-dashed border-slate-300 p-4">
+        <Label>Онцлох зураг</Label>
+        <input type="hidden" {...form.register("coverImageId")} />
+        <MediaUpload
+          value={coverImageUrl}
+          onChange={(url, media) => {
+            setCoverImageUrl(url);
+            form.setValue("coverImageId", media?.id ?? "", { shouldValidate: true, shouldDirty: true });
+          }}
+        />
+        {currentCoverImageId ? (
+          <div>
+            <MediaDeleteButton
+              id={currentCoverImageId}
+              filename="Онцлох зураг"
+              onDeleted={() => {
+                setCoverImageUrl("");
+                form.setValue("coverImageId", "", { shouldValidate: true, shouldDirty: true });
+              }}
+            />
+          </div>
+        ) : null}
+      </div>
       <div className="grid gap-4 md:grid-cols-2">
         <div className="grid gap-2">
-          <Label>Title MN</Label>
+          <Label>Гарчиг MN</Label>
           <Input {...form.register("titleMn")} />
         </div>
         <div className="grid gap-2">
-          <Label>Title EN</Label>
+          <Label>Гарчиг EN</Label>
           <Input {...form.register("titleEn")} />
         </div>
       </div>
       <div className="grid gap-4 md:grid-cols-2">
         <div className="grid gap-2">
-          <Label>Excerpt MN</Label>
+          <Label>Товч тайлбар MN</Label>
           <Textarea {...form.register("excerptMn")} />
         </div>
         <div className="grid gap-2">
-          <Label>Excerpt EN</Label>
+          <Label>Товч тайлбар EN</Label>
           <Textarea {...form.register("excerptEn")} />
         </div>
       </div>
       <div className="grid gap-4 md:grid-cols-2">
         <div className="grid gap-2">
-          <Label>Body MN</Label>
-          <Textarea className="min-h-56" {...form.register("bodyMn")} />
+          <Label>Контент MN</Label>
+          <RichTextEditor value={bodyMn} onChange={(value) => form.setValue("bodyMn", value, { shouldValidate: true, shouldDirty: true })} minHeight="min-h-72" />
         </div>
         <div className="grid gap-2">
-          <Label>Body EN</Label>
-          <Textarea className="min-h-56" {...form.register("bodyEn")} />
+          <Label>Контент EN</Label>
+          <RichTextEditor value={bodyEn ?? ""} onChange={(value) => form.setValue("bodyEn", value, { shouldValidate: true, shouldDirty: true })} minHeight="min-h-72" />
         </div>
       </div>
       {message ? <p className="text-sm text-slate-500">{message}</p> : null}
       <Button type="submit" disabled={form.formState.isSubmitting}>
         {form.formState.isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
-        Save article
+        Нийтлэл хадгалах
       </Button>
     </form>
   );

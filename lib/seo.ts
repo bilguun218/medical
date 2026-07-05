@@ -8,17 +8,30 @@ type SeoInput = {
   path: string;
   title?: string;
   description?: string;
+  ogImage?: string | null;
+  seo?: {
+    titleMn?: string | null;
+    titleEn?: string | null;
+    descriptionMn?: string | null;
+    descriptionEn?: string | null;
+    ogImage?: string | null;
+    noIndex?: boolean | null;
+  } | null;
 };
 
-export function createMetadata({ locale, path, title, description }: SeoInput): Metadata {
-  const pageTitle = title ? `${title} | ${company.brand}` : `${company.name[locale]} | ${company.tagline[locale]}`;
-  const pageDescription = description ?? company.summary[locale];
+export function createMetadata({ locale, path, title, description, ogImage, seo }: SeoInput): Metadata {
+  const seoTitle = locale === "mn" ? seo?.titleMn : seo?.titleEn;
+  const seoDescription = locale === "mn" ? seo?.descriptionMn : seo?.descriptionEn;
+  const pageTitle = seoTitle || title ? `${seoTitle || title} | ${company.brand}` : `${company.name[locale]} | ${company.tagline[locale]}`;
+  const pageDescription = seoDescription || description || company.summary[locale];
   const url = absoluteUrl(path);
+  const image = seo?.ogImage || ogImage || "/brand/novytas-logo.png";
 
   return {
     metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
     title: pageTitle,
     description: pageDescription,
+    robots: seo?.noIndex ? { index: false, follow: false } : undefined,
     alternates: {
       canonical: url,
       languages: {
@@ -35,7 +48,7 @@ export function createMetadata({ locale, path, title, description }: SeoInput): 
       type: "website",
       images: [
         {
-          url: absoluteUrl("/brand/novytas-logo.png"),
+          url: absoluteUrl(image),
           width: 1200,
           height: 1200,
           alt: company.name[locale]
@@ -46,7 +59,7 @@ export function createMetadata({ locale, path, title, description }: SeoInput): 
       card: "summary_large_image",
       title: pageTitle,
       description: pageDescription,
-      images: [absoluteUrl("/brand/novytas-logo.png")]
+      images: [absoluteUrl(image)]
     }
   };
 }

@@ -5,7 +5,12 @@ const { PrismaClient } = require('@prisma/client');
 (async function() {
   const db = new PrismaClient();
   try {
-    const slug = process.argv[2] || 'test-product';
+    const productId = process.argv[2];
+    if (!productId) {
+      console.error('Usage: node scripts/attach_image_to_product.js <product-id>');
+      process.exit(1);
+    }
+
     const src = path.join(process.cwd(), 'public', 'brand', 'novytas-logo.png');
     if (!fs.existsSync(src)) {
       console.error('Source image not found:', src);
@@ -20,9 +25,9 @@ const { PrismaClient } = require('@prisma/client');
     fs.copyFileSync(src, dest);
     const stat = fs.statSync(dest);
 
-    const product = await db.product.findUnique({ where: { slug } });
+    const product = await db.product.findUnique({ where: { id: productId } });
     if (!product) {
-      console.error('Product not found for slug', slug);
+      console.error('Product not found for id', productId);
       process.exit(1);
     }
 
@@ -47,12 +52,12 @@ const { PrismaClient } = require('@prisma/client');
       }
     });
 
-    console.log('Attached image', media.url, 'to product', slug);
+    console.log('Attached image', media.url, 'to product', productId);
   } catch (err) {
     console.error(err);
     process.exit(1);
   } finally {
-    await (new PrismaClient()).$disconnect().catch(()=>{});
+    await db.$disconnect().catch(()=>{});
     process.exit(0);
   }
 })();

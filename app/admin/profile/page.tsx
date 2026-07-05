@@ -7,11 +7,11 @@ export default async function AdminProfilePage() {
   const session = await auth();
 
   return (
-    <AdminShell title="Profile" activePath="/admin/profile">
+    <AdminShell title="Профайл" activePath="/admin/profile">
       <Card>
         <CardHeader>
           <UserCircle className="h-5 w-5 text-teal" />
-          <CardTitle>{session?.user?.name ?? "Admin user"}</CardTitle>
+          <CardTitle>{session?.user?.name ?? "Админ хэрэглэгч"}</CardTitle>
           <CardDescription>{session?.user?.email}</CardDescription>
         </CardHeader>
       </Card>

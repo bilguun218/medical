@@ -29,7 +29,7 @@ export const dictionary = {
     actions: {
       learnMore: "Дэлгэрэнгүй",
       viewProducts: "Каталог үзэх",
-      sendInquiry: "Лавлагаа илгээх",
+      sendInquiry: "Санал хүсэлт илгээх",
       submit: "Илгээх",
       search: "Хайх",
       filter: "Шүүх",
@@ -73,7 +73,9 @@ export const dictionary = {
         "Эх файлд тодорхой бүтээгдэхүүний нэр, зураг, техникийн үзүүлэлт, PDF хавсралт агуулаагүй тул зохиомол мэдээлэл оруулаагүй.",
       technicalSpecs: "Техникийн үзүүлэлт",
       attachments: "PDF хавсралт",
-      inquiryTitle: "Бүтээгдэхүүний лавлагаа"
+      inquiryTitle: "Үнийн санал авах",
+      quoteButton: "Үнийн санал авах",
+      quoteDescription: "Энэ бүтээгдэхүүний үнэ, нөхцөл болон дэлгэрэнгүй мэдээлэл авах хүсэлтээ илгээнэ үү."
     },
     news: {
       title: "Мэдээ мэдээлэл",
@@ -84,7 +86,7 @@ export const dictionary = {
     },
     contact: {
       title: "Холбоо барих",
-      subtitle: "Санал хүсэлт, хамтын ажиллагааны лавлагаа илгээх.",
+      subtitle: "Санал хүсэлт болон хамтын ажиллагааны хүсэлт илгээх.",
       infoTitle: "Албан мэдээлэл",
       formTitle: "Санал хүсэлт",
       mapUnavailable: "Газрын зургийн мэдээлэл эх файлд байхгүй.",
@@ -99,7 +101,7 @@ export const dictionary = {
       phone: "Утас",
       subject: "Гарчиг",
       message: "Дэлгэрэнгүй мэдээлэл",
-      success: "Таны хүсэлтийг хүлээн авлаа.",
+      success: "Таны санал хүсэлтийг хүлээн авлаа.",
       error: "Илгээх үед алдаа гарлаа."
     },
     admin: {
@@ -132,7 +134,7 @@ export const dictionary = {
     actions: {
       learnMore: "Learn more",
       viewProducts: "View catalog",
-      sendInquiry: "Send inquiry",
+      sendInquiry: "Send request",
       submit: "Submit",
       search: "Search",
       filter: "Filter",
@@ -176,7 +178,9 @@ export const dictionary = {
         "The source document does not contain specific product names, images, technical specifications, or PDF attachments, so no fabricated records were added.",
       technicalSpecs: "Technical specifications",
       attachments: "PDF attachments",
-      inquiryTitle: "Product inquiry"
+      inquiryTitle: "Request a quote",
+      quoteButton: "Request a quote",
+      quoteDescription: "Send a request to receive pricing, terms, and detailed information for this product."
     },
     news: {
       title: "News",
@@ -189,7 +193,7 @@ export const dictionary = {
       title: "Contact",
       subtitle: "Send inquiries and partnership requests.",
       infoTitle: "Official information",
-      formTitle: "Inquiry form",
+      formTitle: "Request form",
       mapUnavailable: "Map information is not provided in the source document.",
       hoursUnavailable: "Business hours are not provided in the source document.",
       phoneUnavailable: "Phone information is not provided in the source document.",
@@ -202,7 +206,7 @@ export const dictionary = {
       phone: "Phone",
       subject: "Subject",
       message: "Message",
-      success: "Your inquiry has been received.",
+      success: "Your request has been received.",
       error: "Something went wrong while sending."
     },
     admin: {

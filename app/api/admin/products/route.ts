@@ -1,46 +1,33 @@
-import { mkdir, writeFile } from "fs/promises";
-import path from "path";
 import { NextResponse } from "next/server";
 import { apiError, requireAdminSession } from "@/lib/admin";
 import { db } from "@/lib/db";
+import { saveMediaUpload } from "@/lib/media";
+import { buildProductCreateData } from "@/lib/product-admin-input";
 import { productSchema } from "@/lib/validators";
 
-function createSlug(value: string) {
-  return value
-    .trim()
-    .toLowerCase()
-    .replace(/\s+/g, "-")
-    .replace(/[^\p{L}0-9-]+/gu, "")
-    .replace(/^-+|-+$/g, "");
+function getUploadFile(formData: FormData, key: string) {
+  const value = formData.get(key);
+  return value instanceof File && value.size > 0 ? value : null;
 }
 
-async function generateUniqueSlug(baseSlug: string) {
-  let slug = baseSlug;
-  let counter = 1;
-
-  while (await db.product.findUnique({ where: { slug } })) {
-    slug = `${baseSlug}-${counter++}`;
-  }
-
-  return slug;
+function isPdfFile(file: File) {
+  return file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf");
 }
 
-function sanitizeFileName(name: string) {
-  const ext = path.extname(name || "image.jpg").toLowerCase();
-  const base = path.basename(name || "image", ext).replace(/[^a-zA-Z0-9._-]+/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "") || "image";
-  return `${Date.now()}-${base.slice(0, 80)}${ext || ".jpg"}`;
-}
+async function attachProductMedia(productId: string, file: File, role: "GALLERY" | "DATASHEET", sortOrder: number, titleMn: string, titleEn?: string) {
+  const media = await saveMediaUpload(file, {
+    altMn: titleMn,
+    altEn: titleEn || titleMn
+  });
 
-async function saveUploadedImage(file: File, title: string) {
-  const uploadDir = path.join(process.cwd(), "public", "uploads");
-  await mkdir(uploadDir, { recursive: true });
-
-  const fileName = sanitizeFileName(file.name || `${title || "product"}.jpg`);
-  const filePath = path.join(uploadDir, fileName);
-  const bytes = Buffer.from(await file.arrayBuffer());
-  await writeFile(filePath, bytes);
-
-  return `/uploads/${fileName}`;
+  await db.productMedia.create({
+    data: {
+      productId,
+      mediaId: media.id,
+      role,
+      sortOrder
+    }
+  });
 }
 
 export async function GET() {
@@ -63,10 +50,12 @@ export async function POST(request: Request) {
     const contentType = request.headers.get("content-type") || "";
     let payload: Record<string, unknown> = {};
     let uploadedFile: File | null = null;
+    let uploadedPdf: File | null = null;
 
     if (contentType.includes("multipart/form-data")) {
       const formData = await request.formData();
-      uploadedFile = formData.get("image") instanceof File ? (formData.get("image") as File) : null;
+      uploadedFile = getUploadFile(formData, "image");
+      uploadedPdf = getUploadFile(formData, "pdf");
 
       for (const [key, value] of formData.entries()) {
         if (typeof value === "string") {
@@ -83,49 +72,20 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
     }
 
-    const slugBase = createSlug(parsed.data.slug?.trim() || parsed.data.titleMn || parsed.data.titleEn || "product");
-    const finalSlug = await generateUniqueSlug(slugBase || `product-${Date.now()}`);
+    if (uploadedPdf && !isPdfFile(uploadedPdf)) {
+      return NextResponse.json({ error: "PDF файл сонгоно уу." }, { status: 400 });
+    }
 
     const product = await db.product.create({
-      data: {
-        ...parsed.data,
-        slug: finalSlug,
-        titleEn: parsed.data.titleEn || null,
-        tag: parsed.data.tag?.trim() ? parsed.data.tag : null,
-        summaryMn: parsed.data.summaryMn || null,
-        summaryEn: parsed.data.summaryEn || null,
-        descriptionMn: parsed.data.descriptionMn || null,
-        descriptionEn: parsed.data.descriptionEn || null,
-        seoTitleMn: parsed.data.seoTitleMn || null,
-        seoTitleEn: parsed.data.seoTitleEn || null,
-        seoDescriptionMn: parsed.data.seoDescriptionMn || null,
-        seoDescriptionEn: parsed.data.seoDescriptionEn || null,
-        publishedAt: parsed.data.status === "PUBLISHED" ? new Date() : null
-      }
+      data: buildProductCreateData(parsed.data)
     });
 
-    if (uploadedFile && uploadedFile.size > 0) {
-      const imageUrl = await saveUploadedImage(uploadedFile, parsed.data.titleMn);
-      const media = await db.media.create({
-        data: {
-          type: "IMAGE",
-          url: imageUrl,
-          filename: uploadedFile.name || "product-image",
-          altMn: parsed.data.titleMn,
-          altEn: parsed.data.titleEn || parsed.data.titleMn,
-          mimeType: uploadedFile.type || "image/jpeg",
-          size: uploadedFile.size
-        }
-      });
+    if (uploadedFile) {
+      await attachProductMedia(product.id, uploadedFile, "GALLERY", 0, parsed.data.titleMn, parsed.data.titleEn);
+    }
 
-      await db.productMedia.create({
-        data: {
-          productId: product.id,
-          mediaId: media.id,
-          role: "GALLERY",
-          sortOrder: 0
-        }
-      });
+    if (uploadedPdf) {
+      await attachProductMedia(product.id, uploadedPdf, "DATASHEET", 1, parsed.data.titleMn, parsed.data.titleEn);
     }
 
     return NextResponse.json(product, { status: 201 });

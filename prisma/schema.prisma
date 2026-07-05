@@ -96,7 +96,6 @@ model VerificationToken {
 
 model ProductCategory {
   id            String    @id @default(cuid())
-  slug          String    @unique
   titleMn       String
   titleEn       String
   descriptionMn String?   @db.Text
@@ -109,7 +108,6 @@ model ProductCategory {
 
 model Product {
   id               String          @id @default(cuid())
-  slug             String          @unique
   categoryId       String
   titleMn          String
   titleEn          String?
@@ -146,7 +144,6 @@ model ProductMedia {
 
 model NewsCategory {
   id            String    @id @default(cuid())
-  slug          String    @unique
   titleMn       String
   titleEn       String
   descriptionMn String?   @db.Text
@@ -158,7 +155,6 @@ model NewsCategory {
 
 model Article {
   id               String        @id @default(cuid())
-  slug             String        @unique
   categoryId       String?
   authorId         String?
   titleMn          String

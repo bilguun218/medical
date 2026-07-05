@@ -9,8 +9,7 @@ export function ThemeToggle() {
 
   useEffect(() => {
     const stored = window.localStorage.getItem("novitas-theme") || window.localStorage.getItem("theme");
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const shouldDark = stored ? stored === "dark" : prefersDark;
+    const shouldDark = stored ? stored === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
     document.documentElement.classList.toggle("dark", shouldDark);
     document.documentElement.dataset.theme = shouldDark ? "dark" : "light";
     setDark(shouldDark);
@@ -26,7 +25,7 @@ export function ThemeToggle() {
   }
 
   return (
-    <Button variant="ghost" size="icon" type="button" onClick={toggle} aria-label="Toggle theme">
+    <Button variant="ghost" size="icon" type="button" onClick={toggle} aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}>
       {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
     </Button>
   );

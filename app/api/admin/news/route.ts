@@ -30,6 +30,7 @@ export async function POST(request: Request) {
       data: {
         ...parsed.data,
         categoryId: parsed.data.categoryId || null,
+        coverImageId: parsed.data.coverImageId || null,
         authorId: session.user.id,
         titleEn: parsed.data.titleEn || null,
         excerptMn: parsed.data.excerptMn || null,
@@ -39,7 +40,7 @@ export async function POST(request: Request) {
         seoTitleEn: parsed.data.seoTitleEn || null,
         seoDescriptionMn: parsed.data.seoDescriptionMn || null,
         seoDescriptionEn: parsed.data.seoDescriptionEn || null,
-        publishedAt: parsed.data.status === "PUBLISHED" ? new Date() : null
+        publishedAt: parsed.data.status === "PUBLISHED" ? parsed.data.publishedAt ? new Date(parsed.data.publishedAt) : new Date() : null
       }
     });
 

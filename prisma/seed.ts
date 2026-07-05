@@ -25,24 +25,32 @@ async function main() {
   });
 
   for (const category of productCategories) {
-    await prisma.productCategory.upsert({
-      where: { slug: category.slug },
-      update: {
-        titleMn: category.title.mn,
-        titleEn: category.title.en,
-        descriptionMn: category.description.mn,
-        descriptionEn: category.description.en,
-        sortOrder: category.sortOrder
-      },
-      create: {
-        slug: category.slug,
-        titleMn: category.title.mn,
-        titleEn: category.title.en,
-        descriptionMn: category.description.mn,
-        descriptionEn: category.description.en,
-        sortOrder: category.sortOrder
-      }
+    const existingCategory = await prisma.productCategory.findFirst({
+      where: { titleMn: category.title.mn }
     });
+
+    if (existingCategory) {
+      await prisma.productCategory.update({
+        where: { id: existingCategory.id },
+        data: {
+          titleMn: category.title.mn,
+          titleEn: category.title.en,
+          descriptionMn: category.description.mn,
+          descriptionEn: category.description.en,
+          sortOrder: category.sortOrder
+        }
+      });
+    } else {
+      await prisma.productCategory.create({
+        data: {
+          titleMn: category.title.mn,
+          titleEn: category.title.en,
+          descriptionMn: category.description.mn,
+          descriptionEn: category.description.en,
+          sortOrder: category.sortOrder
+        }
+      });
+    }
   }
 }
 

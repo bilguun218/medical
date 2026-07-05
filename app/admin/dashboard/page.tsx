@@ -28,8 +28,8 @@ export default async function DashboardPage() {
         {[
           { label: "Бүтээгдэхүүн", value: metrics.products, icon: Boxes },
           { label: "Нийтлэл", value: metrics.articles, icon: Newspaper },
-          { label: "Лавлагаа", value: metrics.inquiries, icon: MessageSquare },
-          { label: "Шинэ лавлагаа", value: metrics.newInquiries, icon: Activity }
+          { label: "Санал хүсэлт", value: metrics.inquiries, icon: MessageSquare },
+          { label: "Шинэ санал хүсэлт", value: metrics.newInquiries, icon: Activity }
         ].map((item) => (
           <Card key={item.label}>
             <CardHeader>
@@ -44,7 +44,7 @@ export default async function DashboardPage() {
         <CardHeader>
           <CardTitle>Үйл ажиллагааны хүрээ</CardTitle>
           <CardDescription>
-            Бүтээгдэхүүний каталог, мэдээний нийтлэл, холбоо барих лавлагаа, медиа мета мэдээлэл, SEO бүртгэл, тохиргоог Prisma-ар PostgreSQL дээр загварчилсан.
+            Бүтээгдэхүүний каталог, мэдээний нийтлэл, холбоо барих санал хүсэлт, медиа мета мэдээлэл, SEO бүртгэл, тохиргоог Prisma-ар PostgreSQL дээр загварчилсан.
           </CardDescription>
         </CardHeader>
       </Card>

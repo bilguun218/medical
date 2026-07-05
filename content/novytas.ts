@@ -4,7 +4,7 @@ type LocalizedText = Record<Locale, string>;
 
 export const company = {
   name: {
-    mn: "NOVYTAS ХХК",
+    mn: "Новитас ХХК",
     en: "NOVYTAS LLC"
   },
   brand: "NOVYTAS",
@@ -61,7 +61,6 @@ export const company = {
 
 export const productCategories = [
   {
-    slug: "medical-equipment",
     sortOrder: 1,
     title: {
       mn: "Эмнэлгийн тоног төхөөрөмж",
@@ -75,7 +74,6 @@ export const productCategories = [
     }
   },
   {
-    slug: "medicines-and-medical-supplies",
     sortOrder: 2,
     title: {
       mn: "Эм, эмнэлгийн хэрэгсэл",
@@ -89,7 +87,6 @@ export const productCategories = [
     }
   },
   {
-    slug: "children-health-products",
     sortOrder: 3,
     title: {
       mn: "Хүүхдийн эрүүл мэндийн бүтээгдэхүүн",
@@ -199,7 +196,7 @@ export const compliance = [
 
 export const compliancePrinciple = {
   mn:
-    "Новитас ХХК нь Монгол Улсын 1990 онд нэгдэн орсон НҮБ-ын Хүүхдийн эрхийн тухай конвенцийг үйл ажиллагааныхаа суурь зарчим болгон баримталдаг. Конвенцийн 3 дугаар зүйлд заасан “хүүхдийн язгуур эрх ашгийг юуны өмнө харгалзах” зарчим, 24 дүгээр зүйлд заасан хүүхдийн эрүүл мэндээ хамгаалуулах эрхийг бүтээгдэхүүний сонголт, чанарын хяналт, мэдээллийн ил тод байдалдаа тусган хэрэгжүүлдэг.",
+    "Новитас ХХК нь Монгол Улсын 1990 онд нэгдэн орсон НҮБ-ын Хүүхдийн эрхийн тухай конвенцийг үйл ажиллагааныхаа суурь зарчим болгон баримталдаг. Конвенцийн 3 дугаар зүйлд заасан “хүүхдийн язгуур эрх ашгийг юуны өмнө харгалзах” зарчим, 24 дүгээр зүйлд заасан хүүхдийн эрүүл мэндээ хамгаалуулах эрхийг бүтээгдэхүүний сонголт, чанарын хяналт, мэдээллийн ил тод байдалдаа тусган хэрэгжүүлдэг. Үүний зэрэгцээ Монгол Улсын дараах хууль тогтоомжийн шаардлагыг чанд мөрдөнө:",
   en:
     "NOVYTAS LLC follows the UN Convention on the Rights of the Child, which Mongolia joined in 1990, as a foundational operating principle. The company reflects the principle of prioritizing the best interests of the child stated in Article 3 and children's right to health protection stated in Article 24 through product selection, quality control, and transparent information."
 } as const satisfies LocalizedText;

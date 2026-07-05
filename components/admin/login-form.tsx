@@ -27,7 +27,7 @@ export function LoginForm() {
     setLoading(false);
 
     if (response?.error) {
-      setError("Invalid email or password.");
+      setError("Имэйл эсвэл нууц үг буруу байна.");
       return;
     }
 
@@ -38,17 +38,17 @@ export function LoginForm() {
   return (
     <form className="grid gap-5" onSubmit={onSubmit}>
       <div className="grid gap-2">
-        <Label htmlFor="email">Email</Label>
+        <Label htmlFor="email">Имэйл</Label>
         <Input id="email" name="email" type="email" autoComplete="email" required />
       </div>
       <div className="grid gap-2">
-        <Label htmlFor="password">Password</Label>
+        <Label htmlFor="password">Нууц үг</Label>
         <Input id="password" name="password" type="password" autoComplete="current-password" required />
       </div>
       {error ? <p className="text-sm text-red-600">{error}</p> : null}
       <Button type="submit" disabled={loading}>
         {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <LogIn className="h-4 w-4" />}
-        Sign in
+        Нэвтрэх
       </Button>
     </form>
   );

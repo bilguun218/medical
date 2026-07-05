@@ -3,9 +3,7 @@ import { apiError, requireAdminSession } from "@/lib/admin";
 import { db } from "@/lib/db";
 import { articleSchema } from "@/lib/validators";
 
-type RouteContext = { params: Promise<{ id: string }> };
-
-export async function PATCH(request: Request, { params }: RouteContext) {
+export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     await requireAdminSession();
     const { id } = await params;
@@ -20,8 +18,16 @@ export async function PATCH(request: Request, { params }: RouteContext) {
       where: { id },
       data: {
         ...parsed.data,
-        categoryId: parsed.data.categoryId || undefined,
-        publishedAt: parsed.data.status === "PUBLISHED" ? new Date() : parsed.data.status === "DRAFT" ? null : undefined
+        categoryId: parsed.data.categoryId !== undefined ? parsed.data.categoryId || null : undefined,
+        coverImageId: parsed.data.coverImageId !== undefined ? parsed.data.coverImageId || null : undefined,
+        publishedAt:
+          parsed.data.status === "PUBLISHED"
+            ? parsed.data.publishedAt ? new Date(parsed.data.publishedAt) : new Date()
+            : parsed.data.status === "DRAFT"
+              ? null
+              : parsed.data.publishedAt
+                ? new Date(parsed.data.publishedAt)
+                : undefined
       }
     });
 
@@ -31,7 +37,7 @@ export async function PATCH(request: Request, { params }: RouteContext) {
   }
 }
 
-export async function DELETE(_request: Request, { params }: RouteContext) {
+export async function DELETE(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     await requireAdminSession();
     const { id } = await params;

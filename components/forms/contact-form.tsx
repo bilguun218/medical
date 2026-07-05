@@ -15,7 +15,19 @@ import { Textarea } from "@/components/ui/textarea";
 
 type ContactFormValues = z.infer<typeof contactInquirySchema>;
 
-export function ContactForm({ locale, productId }: { locale: Locale; productId?: string }) {
+export function ContactForm({
+  locale,
+  productId,
+  defaultSubject = "",
+  defaultMessage = "",
+  submitLabel
+}: {
+  locale: Locale;
+  productId?: string;
+  defaultSubject?: string;
+  defaultMessage?: string;
+  submitLabel?: string;
+}) {
   const dict = dictionary[locale];
   const [message, setMessage] = useState<string | null>(null);
 
@@ -26,8 +38,8 @@ export function ContactForm({ locale, productId }: { locale: Locale; productId?:
       organization: "",
       email: "",
       phone: "",
-      subject: "",
-      message: "",
+      subject: defaultSubject,
+      message: defaultMessage,
       productId
     }
   });
@@ -80,7 +92,7 @@ export function ContactForm({ locale, productId }: { locale: Locale; productId?:
       {message ? <p className="text-sm text-muted-foreground">{message}</p> : null}
       <Button type="submit" disabled={form.formState.isSubmitting}>
         {form.formState.isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-        {dict.actions.submit}
+        {submitLabel ?? dict.actions.submit}
       </Button>
     </form>
   );

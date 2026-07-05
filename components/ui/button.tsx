@@ -4,20 +4,21 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "focus-ring inline-flex items-center justify-center gap-2 rounded-lg text-sm font-semibold transition-colors disabled:pointer-events-none disabled:opacity-50",
+  "focus-ring inline-flex items-center justify-center gap-2 rounded-xl text-sm font-semibold transition duration-200 ease-out hover:scale-[1.02] active:scale-[0.99] disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90",
-        medical: "bg-medical text-medical-foreground hover:bg-medical/90",
-        teal: "bg-teal text-teal-foreground hover:bg-teal/90",
-        outline: "border bg-background hover:bg-muted",
-        ghost: "hover:bg-muted",
+        default: "bg-primary text-primary-foreground shadow-subtle hover:bg-primary/90 hover:shadow-premium",
+        medical: "bg-medical text-medical-foreground shadow-subtle hover:bg-medical/90 hover:shadow-premium",
+        teal: "bg-teal text-teal-foreground shadow-subtle hover:bg-teal/90",
+        destructive: "bg-red-600 text-white hover:bg-red-700",
+        outline: "border border-primary/15 bg-white/80 text-primary shadow-sm hover:bg-white hover:shadow-subtle dark:border-white/15 dark:bg-white/10 dark:text-white dark:hover:bg-white/15",
+        ghost: "text-foreground/75 hover:bg-muted hover:text-foreground",
         link: "text-medical underline-offset-4 hover:underline"
       },
       size: {
         default: "h-11 px-5",
-        sm: "h-9 px-3",
+        sm: "h-9 px-3.5",
         lg: "h-12 px-6",
         icon: "h-10 w-10"
       }

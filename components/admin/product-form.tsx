@@ -1,67 +1,85 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, Save } from "lucide-react";
+import { FileText, Loader2, Save } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
+import { MediaDeleteButton } from "@/components/admin/media-delete-button";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { productSpecificationsForEditor } from "@/lib/product-specifications";
 import { productSchema } from "@/lib/validators";
-
-function createSlug(value: string) {
-  return value
-    .trim()
-    .toLowerCase()
-    .replace(/\s+/g, "-")
-    .replace(/[^\p{L}0-9-]+/gu, "")
-    .replace(/^-+|-+$/g, "");
-}
 
 type ProductFormValues = z.infer<typeof productSchema>;
 
+export type AdminProductFormProduct = {
+  id: string;
+  categoryId: string;
+  tag: string | null;
+  titleMn: string;
+  titleEn: string | null;
+  summaryMn: string | null;
+  summaryEn: string | null;
+  descriptionMn: string | null;
+  descriptionEn: string | null;
+  specifications: unknown;
+  status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
+  seoTitleMn: string | null;
+  seoTitleEn: string | null;
+  seoDescriptionMn: string | null;
+  seoDescriptionEn: string | null;
+  media: Array<{
+    id: string;
+    role: "GALLERY" | "DATASHEET" | "CERTIFICATE" | "BROCHURE";
+    media: {
+      id: string;
+      type: "IMAGE" | "PDF" | "DOCUMENT";
+      url: string;
+      filename: string;
+    };
+  }>;
+};
+
 export function ProductForm({
-  categories
+  categories,
+  product
 }: {
-  categories: Array<{ id: string; titleMn: string; titleEn: string; slug: string }>;
+  categories: Array<{ id: string; titleMn: string; titleEn: string }>;
+  product?: AdminProductFormProduct;
 }) {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const pdfInputRef = useRef<HTMLInputElement>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedPdfFile, setSelectedPdfFile] = useState<File | null>(null);
+  const existingImages = product?.media.filter((item) => item.media.type === "IMAGE") ?? [];
+  const existingFiles = product?.media.filter((item) => item.media.type === "PDF" || item.role !== "GALLERY") ?? [];
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
     defaultValues: {
-      slug: "",
-      categoryId: categories[0]?.id ?? "",
-      tag: "",
-      titleMn: "",
-      titleEn: "",
-      summaryMn: "",
-      summaryEn: "",
-      descriptionMn: "",
-      descriptionEn: "",
-      status: "DRAFT",
-      seoTitleMn: "",
-      seoTitleEn: "",
-      seoDescriptionMn: "",
-      seoDescriptionEn: ""
+      categoryId: product?.categoryId ?? categories[0]?.id ?? "",
+      tag: product?.tag ?? "",
+      titleMn: product?.titleMn ?? "",
+      titleEn: product?.titleEn ?? "",
+      summaryMn: product?.summaryMn ?? "",
+      summaryEn: product?.summaryEn ?? "",
+      descriptionMn: product?.descriptionMn ?? "",
+      descriptionEn: product?.descriptionEn ?? "",
+      specifications: productSpecificationsForEditor(product?.specifications),
+      status: product?.status ?? "DRAFT",
+      seoTitleMn: product?.seoTitleMn ?? "",
+      seoTitleEn: product?.seoTitleEn ?? "",
+      seoDescriptionMn: product?.seoDescriptionMn ?? "",
+      seoDescriptionEn: product?.seoDescriptionEn ?? ""
     }
   });
-
-  const titleMn = form.watch("titleMn");
-
-  useEffect(() => {
-    const slugValue = form.getValues("slug");
-    if (!slugValue || slugValue === createSlug(slugValue)) {
-      form.setValue("slug", createSlug(titleMn));
-    }
-  }, [titleMn, form]);
 
   async function onSubmit(values: ProductFormValues) {
     setMessage(null);
@@ -77,30 +95,41 @@ export function ProductForm({
       formData.append("image", selectedFile);
     }
 
-    const response = await fetch("/api/admin/products", {
-      method: "POST",
+    if (selectedPdfFile) {
+      formData.append("pdf", selectedPdfFile);
+    }
+
+    const response = await fetch(product ? `/api/admin/products/${product.id}` : "/api/admin/products", {
+      method: product ? "PATCH" : "POST",
       body: formData
     });
 
     if (!response.ok) {
       const payload = await response.json().catch(() => null);
-      const errorMessage = payload?.error?.formErrors?.fieldErrors
-        ? Object.entries(payload.error.formErrors.fieldErrors)
-            .flatMap(([key, msgs]) => msgs.map((msg: string) => `${key}: ${msg}`))
+      const fieldErrors = payload?.error?.fieldErrors;
+      const errorMessage = fieldErrors
+        ? Object.entries(fieldErrors)
+            .flatMap(([key, msgs]) => Array.isArray(msgs) ? msgs.map((msg) => `${key}: ${msg}`) : [])
             .join("; ")
         : payload?.error || "Хадгалах үед алдаа гарлаа.";
       setMessage(String(errorMessage));
       return;
     }
 
-    form.reset();
+    if (!product) {
+      form.reset();
+    }
     setSelectedFile(null);
+    setSelectedPdfFile(null);
     setImagePreview(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
+    if (pdfInputRef.current) {
+      pdfInputRef.current.value = "";
+    }
     router.refresh();
-    setMessage("Бүтээгдэхүүнийг амжилттай хадгаллаа.");
+    setMessage(product ? "Бүтээгдэхүүнийг амжилттай шинэчиллээ." : "Бүтээгдэхүүнийг амжилттай хадгаллаа.");
   }
 
   return (
@@ -115,12 +144,7 @@ export function ProductForm({
           ))}
         </select>
       </div>
-      <div className="grid gap-4 md:grid-cols-3">
-        <div className="grid gap-2">
-          <Label>Slug</Label>
-          <Input {...form.register("slug")} placeholder="Жишээ: icu-ventilator" />
-          <p className="text-xs text-slate-500">Slug нь URL-д ашиглагдах товч нэр юм. Хоосон байвал систем автоматаар гаргана.</p>
-        </div>
+      <div className="grid gap-4 md:grid-cols-2">
         <div className="grid gap-2">
           <Label>Таг</Label>
           <Input {...form.register("tag")} placeholder="жишээ: ICU" />
@@ -164,6 +188,15 @@ export function ProductForm({
           <Textarea {...form.register("descriptionEn")} />
         </div>
       </div>
+      <div className="grid gap-2">
+        <Label>Техникийн үзүүлэлт</Label>
+        <Textarea
+          {...form.register("specifications")}
+          className="min-h-40"
+          placeholder={"Мөр бүрийг дараах хэлбэрээр бичнэ:\nЗагвар | NV-120\nХэмжээ | 120 x 80 x 60 мм\nБаталгаа | 12 сар"}
+        />
+        <p className="text-xs leading-5 text-slate-500">Мөр бүрийн зүүн талд үзүүлэлтийн нэр, баруун талд утгыг оруулна. `|`, `:` эсвэл `=` тэмдэг ашиглаж болно.</p>
+      </div>
       <div className="grid gap-4 md:grid-cols-2">
         <div className="grid gap-2">
           <Label>SEO гарчиг (MN)</Label>
@@ -176,7 +209,28 @@ export function ProductForm({
       </div>
       <div className="grid gap-2 rounded-lg border border-dashed border-slate-300 p-4">
         <Label>Бүтээгдэхүүний зураг</Label>
-        <p className="text-sm text-slate-500">Зураг нэмэх боломжтой. Энэ алхам нь одоогоор локал хадгалалттай бөгөөд дараагийн алхмаар media системд холбогдоно.</p>
+        <p className="text-sm text-slate-500">Зураг нэмэх боломжтой. Файл нь media сан руу хадгалагдаж бүтээгдэхүүнтэй холбогдоно.</p>
+        {existingImages.length > 0 ? (
+          <div className="grid gap-3 text-sm text-slate-600">
+            {existingImages.map((item) => (
+              <div key={item.id} className="flex flex-col gap-3 rounded-lg border bg-white p-3 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex min-w-0 items-center gap-3">
+                  <div className="h-16 w-20 shrink-0 overflow-hidden rounded-lg border bg-slate-50">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={item.media.url} alt={item.media.filename} className="h-full w-full object-cover" />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="truncate font-medium">{item.media.filename}</p>
+                    <a href={item.media.url} target="_blank" rel="noreferrer" className="text-xs text-teal hover:underline">
+                      Нээх
+                    </a>
+                  </div>
+                </div>
+                <MediaDeleteButton id={item.media.id} filename={item.media.filename} />
+              </div>
+            ))}
+          </div>
+        ) : null}
         <Input
           ref={fileInputRef}
           type="file"
@@ -195,10 +249,36 @@ export function ProductForm({
         />
         {imagePreview ? <Image src={imagePreview} alt="Product preview" width={800} height={400} className="h-40 w-full rounded-lg object-cover" /> : null}
       </div>
+      <div className="grid gap-2 rounded-lg border border-dashed border-slate-300 p-4">
+        <Label>PDF хавсралт</Label>
+        <p className="text-sm text-slate-500">Техникийн паспорт, datasheet, brochure зэрэг PDF файлыг хавсаргана.</p>
+        {existingFiles.length > 0 ? (
+          <div className="grid gap-2 text-sm text-slate-600">
+            {existingFiles.map((item) => (
+              <div key={item.id} className="flex flex-col gap-3 rounded-lg border bg-white p-3 sm:flex-row sm:items-center sm:justify-between">
+                <a href={item.media.url} target="_blank" rel="noreferrer" className="inline-flex min-w-0 items-center gap-2 hover:text-teal">
+                  <FileText className="h-4 w-4 shrink-0" />
+                  <span className="truncate">{item.media.filename}</span>
+                </a>
+                <MediaDeleteButton id={item.media.id} filename={item.media.filename} />
+              </div>
+            ))}
+          </div>
+        ) : null}
+        <Input
+          ref={pdfInputRef}
+          type="file"
+          accept="application/pdf,.pdf"
+          onChange={(event) => {
+            setSelectedPdfFile(event.target.files?.[0] ?? null);
+          }}
+        />
+        {selectedPdfFile ? <p className="text-sm text-slate-500">Сонгосон файл: {selectedPdfFile.name}</p> : null}
+      </div>
       {message ? <p className="text-sm text-slate-500">{message}</p> : null}
       <Button type="submit" disabled={form.formState.isSubmitting}>
         {form.formState.isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
-        Бүтээгдэхүүн хадгалах
+        {product ? "Бүтээгдэхүүн шинэчлэх" : "Бүтээгдэхүүн хадгалах"}
       </Button>
     </form>
   );

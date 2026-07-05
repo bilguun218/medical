@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 
 export const metadata = {
-  title: "NOVYTAS Admin",
+  title: "NOVYTAS Админ",
   robots: {
     index: false,
     follow: false

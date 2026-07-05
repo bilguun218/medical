@@ -11,7 +11,6 @@ export const contactInquirySchema = z.object({
 });
 
 export const productSchema = z.object({
-  slug: z.string().max(160).regex(/^[\p{L}0-9]+(?:-[\p{L}0-9]+)*$/u).optional().or(z.literal("")),
   categoryId: z.string().min(1),
   tag: z.string().min(2).max(80).optional().or(z.literal("")),
   titleMn: z.string().min(2).max(220),
@@ -20,6 +19,7 @@ export const productSchema = z.object({
   summaryEn: z.string().max(1000).optional().or(z.literal("")),
   descriptionMn: z.string().max(10000).optional().or(z.literal("")),
   descriptionEn: z.string().max(10000).optional().or(z.literal("")),
+  specifications: z.string().max(20000).optional().or(z.literal("")),
   status: z.enum(["DRAFT", "PUBLISHED", "ARCHIVED"]).default("DRAFT"),
   seoTitleMn: z.string().max(220).optional().or(z.literal("")),
   seoTitleEn: z.string().max(220).optional().or(z.literal("")),
@@ -27,9 +27,17 @@ export const productSchema = z.object({
   seoDescriptionEn: z.string().max(500).optional().or(z.literal(""))
 });
 
+export const productCategorySchema = z.object({
+  titleMn: z.string().trim().min(2).max(220),
+  titleEn: z.string().trim().max(220).optional().or(z.literal("")),
+  descriptionMn: z.string().trim().max(2000).optional().or(z.literal("")),
+  descriptionEn: z.string().trim().max(2000).optional().or(z.literal("")),
+  sortOrder: z.coerce.number().int().min(0).max(10000).default(0)
+});
+
 export const articleSchema = z.object({
-  slug: z.string().min(2).max(160).regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
   categoryId: z.string().optional().or(z.literal("")),
+  coverImageId: z.string().optional().or(z.literal("")),
   titleMn: z.string().min(2).max(220),
   titleEn: z.string().max(220).optional().or(z.literal("")),
   excerptMn: z.string().max(700).optional().or(z.literal("")),
@@ -37,6 +45,7 @@ export const articleSchema = z.object({
   bodyMn: z.string().min(10).max(50000),
   bodyEn: z.string().max(50000).optional().or(z.literal("")),
   status: z.enum(["DRAFT", "PUBLISHED", "ARCHIVED"]).default("DRAFT"),
+  publishedAt: z.string().optional().or(z.literal("")),
   seoTitleMn: z.string().max(220).optional().or(z.literal("")),
   seoTitleEn: z.string().max(220).optional().or(z.literal("")),
   seoDescriptionMn: z.string().max(500).optional().or(z.literal("")),
