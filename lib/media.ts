@@ -31,6 +31,10 @@ function shouldUseBlobStorage() {
   );
 }
 
+function isVercelRuntime() {
+  return Boolean(process.env.VERCEL || process.cwd().startsWith("/var/task"));
+}
+
 function isVercelBlobUrl(url: string) {
   try {
     const parsed = new URL(url);
@@ -68,6 +72,10 @@ export async function saveMediaUpload(file: File, metadata?: { altMn?: string; a
         size: file.size
       }
     });
+  }
+
+  if (isVercelRuntime()) {
+    throw new Error("Vercel Blob is not configured. Add/connect a Blob store and set BLOB_READ_WRITE_TOKEN or BLOB_STORE_ID before uploading media.");
   }
 
   const uploadDir = path.join(process.cwd(), "public", "uploads");

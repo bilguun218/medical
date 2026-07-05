@@ -194,6 +194,8 @@ Vercel Blob setup:
 vercel env pull
 ```
 
+If media upload fails on Vercel with an error like `ENOENT: no such file or directory, mkdir '/var/task/public...'`, Blob is not connected/configured for that deployment. Vercel serverless functions cannot persist uploads to `public/uploads`; configure Vercel Blob and redeploy.
+
 4. Build command:
 
 ```bash
