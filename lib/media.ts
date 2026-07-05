@@ -31,6 +31,11 @@ function shouldUseBlobStorage() {
   );
 }
 
+function getBlobCommandOptions() {
+  const token = process.env.BLOB_READ_WRITE_TOKEN;
+  return token ? { token } : {};
+}
+
 function isVercelRuntime() {
   return Boolean(process.env.VERCEL || process.cwd().startsWith("/var/task"));
 }
@@ -58,7 +63,8 @@ export async function saveMediaUpload(file: File, metadata?: { altMn?: string; a
     const blob = await put(`uploads/${fileName}`, file, {
       access: "public",
       addRandomSuffix: true,
-      contentType: file.type || "application/octet-stream"
+      contentType: file.type || "application/octet-stream",
+      ...getBlobCommandOptions()
     });
 
     return db.media.create({
@@ -75,7 +81,7 @@ export async function saveMediaUpload(file: File, metadata?: { altMn?: string; a
   }
 
   if (isVercelRuntime()) {
-    throw new Error("Vercel Blob is not configured. Add/connect a Blob store and set BLOB_READ_WRITE_TOKEN or BLOB_STORE_ID before uploading media.");
+    throw new Error("Vercel Blob is not configured. Connect a public Blob store and set BLOB_READ_WRITE_TOKEN or BLOB_STORE_ID before uploading media.");
   }
 
   const uploadDir = path.join(process.cwd(), "public", "uploads");
@@ -101,7 +107,7 @@ export async function saveMediaUpload(file: File, metadata?: { altMn?: string; a
 
 export async function deleteStoredMediaFile(url: string) {
   if (isVercelBlobUrl(url)) {
-    await del(url);
+    await del(url, getBlobCommandOptions());
     return;
   }
 
