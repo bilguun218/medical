@@ -5,7 +5,7 @@ import { ContactForm } from "@/components/forms/contact-form";
 import { MotionReveal } from "@/components/site/motion-reveal";
 import { SectionHeading } from "@/components/site/section-heading";
 import { getCmsContent, getSeoRecord, localized } from "@/lib/cms";
-import { getLocale } from "@/lib/i18n";
+import { dictionary, getLocale } from "@/lib/i18n";
 import { createMetadata } from "@/lib/seo";
 
 type PageProps = { params: Promise<{ locale: string }> };
@@ -31,6 +31,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function ContactPage({ params }: PageProps) {
   const { locale: rawLocale } = await params;
   const locale = getLocale(rawLocale);
+  const dict = dictionary[locale];
   const content = await getCmsContent("contact");
   const websiteHref = content.website ? (content.website.startsWith("http") ? content.website : `https://${content.website}`) : "";
   const websiteLabel = content.website.replace(/^https?:\/\//, "").replace(/\/$/, "");
@@ -104,7 +105,7 @@ export default async function ContactPage({ params }: PageProps) {
             <CardDescription>{localized(content.pageSubtitle, locale)}</CardDescription>
           </CardHeader>
           <div className="px-6 pb-6">
-            <ContactForm locale={locale} />
+            <ContactForm locale={locale} submitLabel={dict.actions.sendInquiry} />
           </div>
         </Card>
       </div>

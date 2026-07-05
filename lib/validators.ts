@@ -1,13 +1,13 @@
 import { z } from "zod";
 
 export const contactInquirySchema = z.object({
-  name: z.string().min(2).max(120),
-  organization: z.string().max(160).optional().or(z.literal("")),
-  email: z.string().email().max(160),
-  phone: z.string().max(60).optional().or(z.literal("")),
-  subject: z.string().min(3).max(180),
-  message: z.string().min(10).max(5000),
-  productId: z.string().optional()
+  name: z.string().trim().min(2).max(120),
+  organization: z.string().trim().max(160).optional().or(z.literal("")),
+  email: z.string().trim().email().max(160),
+  phone: z.string().trim().max(60).optional().or(z.literal("")),
+  subject: z.string().trim().min(3).max(180),
+  message: z.string().trim().min(10).max(5000),
+  productId: z.string().trim().optional().or(z.literal(""))
 });
 
 export const productSchema = z.object({
